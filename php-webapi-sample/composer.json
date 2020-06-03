@@ -1,0 +1,9 @@
+{
+    "name": "nunesgrf/lacunasoftware",
+    "description": "Web api sample with token authentication",
+    "autoload": {
+        "psr-4": {
+            "Src\\": "src/"
+        }
+    }
+}
