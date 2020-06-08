@@ -5,6 +5,7 @@ require __DIR__ . '/../vendor/autoload.php';
 use Src\ResourceController;
 use Src\ResourceGateway;
 use Src\AuthenticationService;
+use Src\JwtService;
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -50,12 +51,13 @@ if (!$routeFound) {
     exit();
 }
 
-if ($routeFound['authentication_required']) {
-    $authenticationService = new AuthenticationService();
+if ($routeFound['authentication_required']) { 
     try {
+        $jwtService = new JwtService();
+        $authenticationService = new AuthenticationService($jwtService, 'https://signer.grantid.com');
         $authenticationService->authenticate();
     }
-    catch (Exception $exception) {
+    catch (\Exception $exception) {
         header("HTTP/1.1 401 User Unauthorized");
         exit();
     }
