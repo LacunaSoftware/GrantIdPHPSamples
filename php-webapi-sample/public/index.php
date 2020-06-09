@@ -1,10 +1,11 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require "../bootstrap.php";
 
 use Src\ResourceController;
 use Src\ResourceGateway;
 use Src\AuthenticationService;
+use Src\JwtService;
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -50,12 +51,13 @@ if (!$routeFound) {
     exit();
 }
 
-if ($routeFound['authentication_required']) {
-    $authenticationService = new AuthenticationService();
+if ($routeFound['authentication_required']) { 
     try {
-        $authenticationService->authenticate();
+        $jwtService = new JwtService();
+        $authenticationService = new AuthenticationService($jwtService, $_ENV['ISSUER']);
+        $authenticationService->authenticate($_ENV['API_SCOPE']);
     }
-    catch (Exception $exception) {
+    catch (\Exception $exception) {
         header("HTTP/1.1 401 User Unauthorized");
         exit();
     }
