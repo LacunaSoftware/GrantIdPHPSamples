@@ -20,7 +20,10 @@ class JwtService {
             $valuesAreValid &= $this->checkIssuer($decodedToken['payload'], $issuer);        
             $valuesAreValid &= $this->checkScope($decodedToken['payload'], $scope);
             
-            echo $valuesAreValid;
+            if (!$valuesAreValid) {
+                throw new \Exception("Invalid token.");
+            }
+
             return JWT::decode($token, $publicKey, array('RS256'));
         }
         catch (Exception $exception) {

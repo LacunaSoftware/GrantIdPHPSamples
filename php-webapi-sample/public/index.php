@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require "../bootstrap.php";
 
 use Src\ResourceController;
 use Src\ResourceGateway;
@@ -54,8 +54,8 @@ if (!$routeFound) {
 if ($routeFound['authentication_required']) { 
     try {
         $jwtService = new JwtService();
-        $authenticationService = new AuthenticationService($jwtService, 'https://signer.grantid.com');
-        $authenticationService->authenticate();
+        $authenticationService = new AuthenticationService($jwtService, $_ENV['ISSUER']);
+        $authenticationService->authenticate($_ENV['API_SCOPE']);
     }
     catch (\Exception $exception) {
         header("HTTP/1.1 401 User Unauthorized");

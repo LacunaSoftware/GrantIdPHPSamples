@@ -30,7 +30,7 @@ class AuthenticationService {
         return $keys;
     }
 
-    public function authenticate() {
+    public function authenticate($scope) {
         if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
             throw new \Exception("Authorization header is missing.");
         }
@@ -42,7 +42,7 @@ class AuthenticationService {
         }
 
         $token = $matches[1];
-        $decoded = $this->tokenService->validateAndExtractPayload($token, $this->keySet, $this->issuer, 'openid');
+        $decoded = $this->tokenService->validateAndExtractPayload($token, $this->keySet, $this->issuer, $scope);
         if (!$decoded) {
             throw new \Exception("Provided token is invalid.");
         }
