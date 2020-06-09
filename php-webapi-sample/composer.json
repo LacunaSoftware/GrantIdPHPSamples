@@ -7,8 +7,6 @@
         }
     },
     "require": {
-        "lcobucci/jwt": "^3.3",
-        "auth0/auth0-php": "^7.2",
         "vlucas/phpdotenv": "^4.1",
         "firebase/php-jwt": "^5.2"
     }
