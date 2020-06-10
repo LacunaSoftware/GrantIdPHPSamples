@@ -1,0 +1,17 @@
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
+.footer {
+    position: fixed; 
+    height: 50px; 
+    bottom: 0px; 
+    left: 0px; 
+    right: 0px; 
+    margin-bottom: 0px; 
+    width: 100%; 
+    white-space: nowrap; 
+    line-height: 60px;
+}
