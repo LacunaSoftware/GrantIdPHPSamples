@@ -1,0 +1,9 @@
+{
+    "name": "nunesgrf/lacunasoftware",
+    "description": "Webapp sample with hybrid flow authentication",
+    "autoload": {
+        "psr-4": {
+            "Src\\": "src/"
+        }
+    }
+}
