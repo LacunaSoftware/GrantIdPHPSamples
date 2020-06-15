@@ -39,12 +39,11 @@ class App {
         }
 
         $this->params = $url ? array_values($url) : [];
-
-        
+  
         $loginRequest = isset($url[0]) && $url[0] == 'login';
         $protectedRequest = $this->protectedRoute($openIdClient);
         if ($protectedRequest || $loginRequest) {
-            $openIdClient->authenticate();            
+            $openIdClient->authenticate();           
         }
 
         $logoutRequest = isset($url[0]) && $url[0] === 'logout';
