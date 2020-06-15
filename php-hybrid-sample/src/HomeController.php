@@ -7,13 +7,12 @@ class HomeController extends Controller {
     }
 
     public function privateRoute() {
+        $claims = json_decode($_SESSION['user_claims'], true);
+        
         $data = array(
-            'access_token' => 'access_token',
-            'id_token' => 'id_token',
-            'claims' => array(
-                'key_1' => 'value_1',
-                'key_2' => 'value_2'
-            )
+            'access_token' => $_SESSION['access_token'],
+            'id_token' => $_SESSION['id_token'],
+            'claims' => $claims
         );
         $this->view('privateRoute', $data);
     }
@@ -21,4 +20,5 @@ class HomeController extends Controller {
     public function privacy() {
         $this->view('privacy');
     }
+
 }

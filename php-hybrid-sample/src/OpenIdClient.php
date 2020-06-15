@@ -1,57 +1,53 @@
 <?php
 
+namespace Src;
+
 use Jumbojett\OpenIDConnectClient;
- 
+
 class OpenIdClient {
 
     private $oidc;
     private $sessionKey = 'Session';
 
     public function __construct($issuer, $clientId, $clientSecret, $redirectUri, $apiScopes) {
-        $this->oidc = OpenIDConnectClient($issuer, $clientId, $clientSecret);
+        $this->oidc = new OpenIDConnectClient($issuer, $clientId, $clientSecret);
 
-        $oidc->setRedirectURL($redirectUri);
-        $oidc->addScope(explode(" ", $apiScopes));
+        $this->oidc->setRedirectURL($redirectUri);
+        $this->oidc->addScope(explode(" ", $apiScopes));
 
-        $oidc->setVerifyHost(false);
-        $oidc->setVerifyPeer(false);
+        $this->oidc->setVerifyHost(false);
+        $this->oidc->setVerifyPeer(false);
 
-        $oidc->setResponseTypes(array('code id_token'));
-        $oidc->addAuthParam(array('response_mode' => 'form_post'));
+        $this->oidc->setResponseTypes(array('code id_token'));
+        $this->oidc->addAuthParam(array('response_mode' => 'form_post'));
+    }
+
+    public function getOidc() {
+        return $this->oidc;
     }
 
     public function getAuthentication() {
-        $userSession = $_SESSION[$this->sessionKey];
-        if (!$isset($_SESSION[$this->sessionKey])) {
+        if (!array_key_exists($this->sessionKey, $_SESSION)) {
             throw new \Exception('User session not found.');
         }
-        return $userSession;
+        return $_SESSION[$this->sessionKey];
     }
 
     public function userAuthenticated() {
-        try {
-            $userSession = $this->getAuthentication();
-            return true;
-        }
-        catch (\Exception $exception) {
-            return false;
-        }
+        return array_key_exists('authenticated', $_SESSION) && $_SESSION['authenticated'];
     }
 
     public function authenticate() {
         $this->oidc->authenticate();
-        $_SESSION[$this->sessionKey] = $oidc;
-    }
-
-    public function authorize() {
-        $this->oidc->authorize();
+        $_SESSION['access_token'] = $this->oidc->getAccessToken();
+        $_SESSION['id_token'] = $this->oidc->getIdToken();
+        $_SESSION['user_claims'] = json_encode($this->oidc->getVerifiedClaims());
+        $_SESSION['authenticated'] = true;
     }
     
     public function deauthorize($postLogoutRedirectUri) {
-        $authentication = $this->getAuthentication();
-        $idToken = $authentication['id_token'];
-        unset($_SESSION[$this->sessionKey]);
-
+        $idToken = $_SESSION['id_token'];
+        $_SESSION['authenticated'] = false;
         $this->oidc->signOut($idToken, $postLogoutRedirectUri);
     }
 }
