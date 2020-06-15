@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+        <h1>This is a secured page.</h1>
+        {% for key,value in claims %}
+            <h4>{{ key }}</h4>
+            {% if value is iterable%}
+                {% for v in value %}
+                    {{ v }}
+                {% endfor %}
+            {% else %} 
+                <h6>{{ value }}</h6>        
+            {% endif %}
+        {% endfor %}
+        
+        <h4>access_token:</h4>
+        <h6>{{access_token}}</h6>
+
+        <h4>id_token:</h4>
+        <h6>{{id_token}}</h6>
+{% endblock %}
