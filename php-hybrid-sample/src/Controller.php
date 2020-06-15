@@ -13,7 +13,7 @@ class Controller {
     }
 
     protected function view($view, $data = []) {
-        //$data['authenticated'] = array_key_exists('authenticated', $_SESSION) && $_SESSION['authenticated'];
+        $data['authenticated'] = array_key_exists('authenticated', $_SESSION) && $_SESSION['authenticated'];
         $loader = new FileSystemLoader(__DIR__.'/../public/html');
         $twig = new \Twig\Environment($loader);
         echo $twig->render($view.'.html', $data);

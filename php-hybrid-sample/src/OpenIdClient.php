@@ -48,6 +48,10 @@ class OpenIdClient {
     public function deauthorize($postLogoutRedirectUri) {
         $idToken = $_SESSION['id_token'];
         $_SESSION['authenticated'] = false;
+        $_SESSION['id_token'] = null;
+        $_SESSION['access_token'] = null;
+        $_SESSION['user_claims'] = null;
         $this->oidc->signOut($idToken, $postLogoutRedirectUri);
+     
     }
 }

@@ -33,7 +33,9 @@
                             <li><a href="/">Home</a></li>
                             <li><a href="/Home/PrivateRoute">Private Route</a></li>
                             <li><a href="/Home/Privacy">Privacy</a></li>
-                            <li><a href="/logout">Logout</a></li>
+                            {% if authenticated %}
+                                <li><a href="/logout">Logout</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
