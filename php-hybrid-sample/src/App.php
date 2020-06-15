@@ -13,7 +13,12 @@ class App {
     public function __construct() {
         session_start();
 
-        $openIdClient = new OpenIdClient('https://lacuna-dev.grantid.com', 'hybrid-sample', 'Erm6sTU5CkJnBzjA5aWPLqJUCaGL4ILsY3OWTiwRw2s=', "http://localhost:8091/login","openid profile sample-api");
+        $openIdClient = new OpenIdClient(
+            $_ENV['ISSUER'], $_ENV['CLIENT_ID'], 
+            $_ENV['CLIENT_SECRET'], $_ENV['LOGIN_URI'], 
+            $_ENV['SCOPE']
+        );
+
         $requestUri = substr($_SERVER['REQUEST_URI'], 1);
             
         $url = explode('/', filter_var(rtrim($requestUri, '/'), FILTER_SANITIZE_URL));
@@ -36,15 +41,23 @@ class App {
         $this->params = $url ? array_values($url) : [];
 
         
-        if (!$openIdClient->userAuthenticated() && $this->method === 'PrivateRoute' || (isset($url[0]) && $url[0] == 'login')) {
+        $loginRequest = isset($url[0]) && $url[0] == 'login';
+        $protectedRequest = $this->protectedRoute($openIdClient);
+        if ($protectedRequest || $loginRequest) {
             $openIdClient->authenticate();            
         }
 
-        if (isset($url[0]) && $url[0] === 'logout') {
-            $openIdClient->deauthorize('http://localhost:8091/');
+        $logoutRequest = isset($url[0]) && $url[0] === 'logout';
+        if ($logoutRequest) {
+            $openIdClient->deauthorize($_ENV['POST_LOGOUT_REDIRECT_URI']);
         }
         else {
             call_user_func_array([$this->controller, $this->method], $this->params);
         }
+    }
+
+    private function protectedRoute($openIdClient) {
+        // Implement here your own logic for protected routes.
+        return !$openIdClient->userAuthenticated() && $this->method === 'PrivateRoute';
     }
 }

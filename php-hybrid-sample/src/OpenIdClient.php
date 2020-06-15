@@ -7,16 +7,15 @@ use Jumbojett\OpenIDConnectClient;
 class OpenIdClient {
 
     private $oidc;
-    private $sessionKey = 'Session';
 
-    public function __construct($issuer, $clientId, $clientSecret, $redirectUri, $apiScopes) {
+    public function __construct($issuer, $clientId, $clientSecret, $redirectUri, $apiScopes, $verifyHost = false, $verifyPeer = false) {
         $this->oidc = new OpenIDConnectClient($issuer, $clientId, $clientSecret);
 
         $this->oidc->setRedirectURL($redirectUri);
         $this->oidc->addScope(explode(" ", $apiScopes));
 
-        $this->oidc->setVerifyHost(false);
-        $this->oidc->setVerifyPeer(false);
+        $this->oidc->setVerifyHost($verifyHost);
+        $this->oidc->setVerifyPeer($verifyPeer);
 
         $this->oidc->setResponseTypes(array('code id_token'));
         $this->oidc->addAuthParam(array('response_mode' => 'form_post'));
@@ -24,13 +23,6 @@ class OpenIdClient {
 
     public function getOidc() {
         return $this->oidc;
-    }
-
-    public function getAuthentication() {
-        if (!array_key_exists($this->sessionKey, $_SESSION)) {
-            throw new \Exception('User session not found.');
-        }
-        return $_SESSION[$this->sessionKey];
     }
 
     public function userAuthenticated() {
