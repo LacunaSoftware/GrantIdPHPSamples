@@ -49,5 +49,5 @@ Application will be running on http://localhost:8092
 This sample offers three endpoints `/home` which requires **no authentication**, `/secret` and `/claims` both requiring a bearer token
 issued by https://lacuna-dev.grantid.com.
 
-**tip:** you can easily obtain a valid token for this api by running [this]() webapp.
+**tip:** you can easily obtain a valid token for this api by running [this](https://github.com/LacunaSoftware/GrantIdPHPSamples/tree/master/php-hybrid-sample) webapp.
 

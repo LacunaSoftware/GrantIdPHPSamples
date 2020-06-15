@@ -4,7 +4,8 @@ This repository contains demonstrations of use of Lacuna Software's [GrantId](ht
 
 ## To get started, choose a flow:
 
-- [Web Api Authentication]()
+- [Web Api Authentication](https://github.com/LacunaSoftware/GrantIdPHPSamples/tree/master/php-webapi-sample)
+- [Hybrid Flow](https://github.com/LacunaSoftware/GrantIdPHPSamples/tree/master/php-hybrid-sample)
 
 # See also
 
