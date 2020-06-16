@@ -20,7 +20,6 @@ class App {
         );
 
         $requestUri = substr($_SERVER['REQUEST_URI'], 1);
-            
         $url = explode('/', filter_var(rtrim($requestUri, '/'), FILTER_SANITIZE_URL));
 
         clearstatcache();
@@ -43,9 +42,12 @@ class App {
         $loginRequest = isset($url[0]) && $url[0] == 'login';
         $protectedRequest = $this->protectedRoute($openIdClient);
         if ($protectedRequest || $loginRequest) {
-            $openIdClient->authenticate();           
+            if ($_SERVER['REQUEST_URI'] !== '/login') {
+                setcookie('redirect_url_state', $_SERVER['REQUEST_URI'], time() + 30, '/');
+            }
+            $openIdClient->authenticate();  
+            header('Location: '.$_COOKIE['redirect_url_state']);  
         }
-
         $logoutRequest = isset($url[0]) && $url[0] === 'logout';
         if ($logoutRequest) {
             $openIdClient->deauthorize($_ENV['POST_LOGOUT_REDIRECT_URI']);
